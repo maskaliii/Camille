@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#120d10">
+<title>Pour Camille</title>
+<style>
+:root {
+  --bg:#110c0f;
+  --paper:#f7efe2;
+  --paper2:#ead9c3;
+  --ink:#38292d;
+  --rose:#82465a;
+  --rose-light:#b9788e;
+  --muted:#c7b8be;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 20% 8%, rgba(141,67,95,.16), transparent 24rem),
+    radial-gradient(circle at 80% 35%, rgba(100,46,68,.10), transparent 26rem),
+    linear-gradient(180deg,#120d10 0%,#0d090b 100%);
+  color:#fff;
+  font-family:Georgia,"Times New Roman",serif;
+  overflow-x:hidden;
+}
+#openLetter{position:absolute;opacity:0;pointer-events:none}
+
+.hero{
+  min-height:100svh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:34px 20px 44px;
+  text-align:center;
+}
+.wrap{width:min(92vw,460px)}
+
+.kicker{
+  font:600 .66rem system-ui,-apple-system,sans-serif;
+  text-transform:uppercase;
+  letter-spacing:.32em;
+  color:var(--muted);
+  margin-bottom:18px;
+}
+h1{
+  font-size:clamp(4rem,17vw,6.6rem);
+  font-weight:400;
+  letter-spacing:-.055em;
+  line-height:.92;
+  margin:0 0 18px;
+}
+.intro{
+  max-width:390px;
+  margin:0 auto 38px;
+  color:#dacdd2;
+  font-style:italic;
+  font-size:clamp(1rem,4vw,1.2rem);
+  line-height:1.55;
+}
+
+.envelope-scene{
+  width:min(78vw,340px);
+  margin:0 auto 26px;
+  perspective:900px;
+}
+.envelope{
+  position:relative;
+  display:block;
+  width:100%;
+  aspect-ratio:1.6/1;
+  cursor:pointer;
+  filter:drop-shadow(0 18px 24px rgba(0,0,0,.32));
+}
+.env-base{
+  position:absolute;
+  inset:0;
+  border-radius:10px;
+  overflow:hidden;
+  background:linear-gradient(145deg,#d7b99b,#c7a384);
+}
+.env-base::before{
+  content:"";
+  position:absolute;
+  left:-12%;
+  bottom:-28%;
+  width:72%;
+  height:80%;
+  background:#d1b091;
+  transform:rotate(36deg);
+}
+.env-base::after{
+  content:"";
+  position:absolute;
+  right:-12%;
+  bottom:-28%;
+  width:72%;
+  height:80%;
+  background:#c8a585;
+  transform:rotate(-36deg);
+}
+.inner-letter{
+  position:absolute;
+  left:9%;
+  right:9%;
+  bottom:8%;
+  height:70%;
+  z-index:2;
+  border-radius:6px;
+  background:linear-gradient(180deg,#fff9ef,#f1e3ce);
+  color:#4c3a40;
+  text-align:left;
+  padding:19px 18px;
+  box-shadow:0 8px 18px rgba(0,0,0,.16);
+  transform:translateY(28%);
+  transition:transform .75s ease;
+}
+.inner-letter small{
+  font:600 .62rem system-ui,-apple-system,sans-serif;
+  letter-spacing:.2em;
+  color:#927982;
+}
+.inner-letter div{
+  margin-top:9px;
+  font-size:1.5rem;
+}
+.flap{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:58%;
+  z-index:4;
+  background:linear-gradient(180deg,#e3c9ae,#caa98a);
+  clip-path:polygon(0 0,100% 0,50% 100%);
+  transform-origin:top;
+  transition:transform .7s ease;
+  backface-visibility:hidden;
+}
+.seal{
+  position:absolute;
+  left:50%;
+  top:44%;
+  transform:translate(-50%,-50%);
+  z-index:5;
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(circle at 35% 30%,#be778d,#8a4259 68%,#713347);
+  color:#f8dfe6;
+  font-style:italic;
+  font-size:1.25rem;
+  box-shadow:0 5px 10px rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.12);
+  transition:opacity .25s ease, transform .25s ease;
+}
+
+.open-button{
+  display:inline-block;
+  padding:13px 21px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.17);
+  color:#fff;
+  background:rgba(255,255,255,.055);
+  font:600 .82rem system-ui,-apple-system,sans-serif;
+  cursor:pointer;
+  text-decoration:none;
+}
+.hint{
+  margin-top:12px;
+  color:#9f9096;
+  font:500 .7rem system-ui,-apple-system,sans-serif;
+}
+
+#openLetter:checked ~ .hero .flap{transform:rotateX(180deg)}
+#openLetter:checked ~ .hero .inner-letter{transform:translateY(-34%)}
+#openLetter:checked ~ .hero .seal{
+  opacity:0;
+  transform:translate(-50%,-50%) scale(.75);
+}
+#openLetter:checked ~ .hero .open-button::after{content:" — descends doucement"}
+
+.letter-section{
+  display:none;
+  padding:18px 12px 90px;
+}
+#openLetter:checked ~ .letter-section{display:block}
+
+.paper{
+  width:min(94vw,760px);
+  margin:0 auto;
+  color:var(--ink);
+  background:
+    repeating-linear-gradient(0deg,rgba(80,55,45,.015) 0 1px,transparent 1px 4px),
+    linear-gradient(100deg,var(--paper),#fbf3e7 48%,var(--paper2));
+  border-radius:12px;
+  padding:clamp(30px,7vw,72px) clamp(24px,7vw,66px) 72px;
+  box-shadow:0 28px 80px rgba(0,0,0,.40);
+}
+.paper-head{
+  text-align:center;
+  margin-bottom:46px;
+}
+.paper-head .small{
+  font:600 .62rem system-ui,-apple-system,sans-serif;
+  text-transform:uppercase;
+  letter-spacing:.28em;
+  color:#8e737b;
+}
+.paper-head h2{
+  margin:10px 0 0;
+  font-size:clamp(2.8rem,10vw,4.8rem);
+  font-weight:400;
+  color:#5c3c47;
+}
+.paper p{
+  margin:0 0 1.9rem;
+  font-size:clamp(1.05rem,4vw,1.24rem);
+  line-height:1.86;
+}
+.paper .emphasis{
+  font-size:clamp(1.28rem,5vw,1.68rem);
+  line-height:1.55;
+  color:#734255;
+}
+.final{
+  display:none;
+  text-align:center;
+  padding:84px 22px 110px;
+}
+#openLetter:checked ~ .final{display:block}
+.final .heart{font-size:4rem;margin-bottom:8px}
+.final h3{
+  margin:0 0 14px;
+  font-size:clamp(2.8rem,11vw,5.4rem);
+  font-weight:400;
+}
+.final p{
+  margin:0;
+  color:#c8b9bf;
+  font-style:italic;
+}
+
+.music-toggle{
+  position:fixed;right:14px;bottom:14px;z-index:100;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(17,12,15,.78);color:#fff;
+  border-radius:999px;padding:10px 13px;
+  font:600 .72rem system-ui,-apple-system,sans-serif;
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  box-shadow:0 8px 22px rgba(0,0,0,.24);
+  cursor:pointer;
+}
+
+@media(max-width:420px){
+  .hero{padding-top:28px}
+  .envelope-scene{width:min(76vw,320px)}
+}
+@media(prefers-reduced-motion:reduce){
+  .flap,.inner-letter,.seal{transition:none}
+}
+</style>
+</head>
+<body>
+
+<audio id="bgMusic" preload="metadata" loop playsinline>
+  <source src="Tame%2520Impala%2520-%2520The%2520Less%2520I%2520Know%2520The%2520Better%2520(Audio).mp4" type="audio/mp4">
+</audio>
+<button id="musicToggle" class="music-toggle" type="button" aria-label="Couper ou remettre la musique">♪ Musique</button>
+
+
+<input type="checkbox" id="openLetter">
+
+<section class="hero">
+  <div class="wrap">
+    <div class="kicker">Pour nos un an</div>
+    <h1>Camille</h1>
+    <p class="intro">Il y a des choses que je n’ai jamais vraiment su te dire.</p>
+
+    <div class="envelope-scene">
+      <label class="envelope" for="openLetter">
+        <div class="env-base"></div>
+        <div class="inner-letter">
+          <small>POUR TOI</small>
+          <div>Camille,</div>
+        </div>
+        <div class="flap"></div>
+        <div class="seal">C</div>
+      </label>
+    </div>
+
+    <label class="open-button" for="openLetter">Ouvrir ma lettre</label>
+    <div class="hint">Appuie sur l’enveloppe ou sur le bouton.</div>
+  </div>
+</section>
+
+<section class="letter-section" id="letter">
+  <article class="paper">
+    <div class="paper-head">
+      <div class="small">Une lettre pour toi</div>
+      <h2>Camille</h2>
+    </div>
+    
+    <p class="">Camille,</p>
+<p class="">Il y a des choses que je n’ai jamais vraiment su dire.</p>
+<p class="">Pas parce que je ne les ressentais pas,<br>mais peut-être parce que, pendant longtemps,<br>j’ai appris à ne plus trop montrer ce qui pouvait me toucher.</p>
+<p class="">J’ai vu ceux que j’aime s’inquiéter pour moi<br>sans vraiment savoir comment leur répondre.</p>
+<p class="">Alors avec le temps,<br>j’ai fini par faire comme si rien n’avait vraiment d’importance.</p>
+<p class="">Comme si les départs ne faisaient rien.<br>Comme si les mots ne blessaient pas.<br>Comme si l’avis des autres m’était égal.</p>
+<p class="">Et surtout,<br>comme si je n’avais besoin de personne.</p>
+<p class="">Je crois qu’au fond,<br>c’était plus facile comme ça.</p>
+<p class="">Puis un jour,<br>il y a eu toi.</p>
+<p class="">Toi et tes yeux, assise à quelques centimètres de moi, à ma droite.</p>
+<p class="">Quelques centimètres seulement.</p>
+<p class="">Et pourtant, sans le savoir, c’était peut-être là les premiers liens de mon amour pour toi.</p>
+<p class="">Je me souviens encore de cette sensation étrange que j’éprouvais chaque matin, chaque jour en te voyant, en croisant tes yeux qui me regardaient.</p>
+<p class="">Je les trouvais tellement beaux<br>que j’avais presque l’impression<br>qu’ils m’embrassaient avant toi.</p>
+<p class="">Et je sais que ça peut paraître fou,<br>mais dans tes yeux, à ce moment-là,<br>je n’ai pas seulement vu une jolie fille.</p>
+<p class="">J’ai vu quelque chose que je n’avais encore jamais réussi à imaginer :</p>
+<p class="emphasis">mon avenir.</p>
+<p class="">J’ai vu tout ce qu’une femme pouvait apporter à un homme<br>sans même avoir besoin de lui promettre quoi que ce soit.</p>
+<p class="">J’ai vu de la douceur.<br>De la beauté.<br>Une présence.</p>
+<p class="">J’ai vu quelqu’un<br>avec qui j’avais envie de devenir meilleur.</p>
+<p class="">Et parmi toutes les personnes<br>que j’aurais pu rencontrer,</p>
+<p class="emphasis">je t’ai choisie, toi.</p>
+<p class="">Pas parce que tu étais parfaite.</p>
+<p class="">Mais parce que tu étais Camille.</p>
+<p class="">Parce qu’il y avait quelque chose en toi<br>que je ne retrouvais nulle part ailleurs.</p>
+<p class="">Quelque chose dans ton regard,<br>dans ta façon de sourire,<br>dans ta manière d’être toi<br>sans ressembler à personne.</p>
+<p class="">Et puis je t’ai découverte.</p>
+<p class="">Et j’ai compris que tes yeux<br>n’étaient finalement que la première chose magnifique chez toi.</p>
+<p class="">Parce que oui, tu es belle.</p>
+<p class="">Terriblement belle.</p>
+<p class="">Mais même le mot « magnifique »<br>me paraît ridicule quand j’essaie de parler de toi.</p>
+<p class="">Les hommes ont inventé des milliers de mots<br>pour décrire la beauté,<br>et je trouve presque injuste<br>qu’aucun d’entre eux ne soit assez grand pour toi.</p>
+<p class="">Parce que ta beauté ne s’arrête pas à ton visage.</p>
+<p class="">Elle est dans tes yeux, évidemment.</p>
+<p class="">Mais elle est aussi dans ce qu’ils regardent.</p>
+<p class="">Elle est dans ton sourire,<br>mais surtout dans les moments où tu me le donnes.</p>
+<p class="">Elle est dans ta voix,<br>dans tes gestes,<br>dans tes petites habitudes,<br>dans tes qualités,<br>et même dans ces défauts que je connais maintenant<br>et que je ne voudrais échanger contre ceux de personne.</p>
+<p class="">(Sauf la puff. Ça, je veux bien l’échanger.)</p>
+<p class="">Enfin bref…</p>
+<p class="">Ta beauté.</p>
+<p class="">Elle est à l’extérieur,</p>
+<p class="">mais encore plus à l’intérieur.</p>
+<p class="">Et c’est peut-être ça, finalement,<br>que j’aime le plus chez toi :</p>
+<p class="">plus je te connais,<br>plus je te trouve belle.</p>
+<p class="">Alors j’ai cherché ton prénom.</p>
+<p class="">Camille.</p>
+<p class="">Je voulais savoir d’où venait ce nom<br>que j’ai prononcé tellement de fois cette année<br>qu’il est devenu l’un des mots les plus importants de ma vie.</p>
+<p class="">J’ai remonté les siècles.</p>
+<p class="">Avant le français,<br>il y avait Camilla.</p>
+<p class="">Et il y a plus de deux mille ans, à Rome,<br>on appelait ainsi celle<br>qui avait le droit d’approcher le sacré.</p>
+<p class="">Quand j’ai découvert ça,<br>j’ai compris tellement de choses.</p>
+<p class="">Parce que deux mille ans avant notre rencontre,<br>des hommes avaient déjà caché dans ton prénom<br>un mot que je cherchais pour toi.</p>
+<p class="emphasis">Le sacré.</p>
+<p class="">J’ai continué à remonter ton histoire.</p>
+<p class="">Jusqu’aux Étrusques.</p>
+<p class="">Et puis plus rien.</p>
+<p class="">Ton prénom devient si ancien<br>que son origine finit par se perdre.</p>
+<p class="">Les mots s’arrêtent.</p>
+<p class="">Et étrangement,<br>j’ai trouvé ça encore plus beau.</p>
+<p class="">Parce que moi aussi,<br>quand j’essaie d’expliquer ce que tu représentes pour moi,<br>à un moment,</p>
+<p class="">les mots s’arrêtent.</p>
+<p class="">Comment expliquer que quelqu’un<br>qui n’existait presque pas dans ma vie il y a encore un peu plus d’un an<br>puisse aujourd’hui en occuper autant ?</p>
+<p class="">Comment expliquer<br>que moi, qui ne savais pas exprimer mon amour,<br>je sois aujourd’hui en train de chercher dans des langues vieilles de plusieurs millénaires<br>une façon suffisamment belle<br>de te dire que je t’aime ?</p>
+<p class="">Tu vois ce que tu as fait de moi, Camille ?</p>
+<p class="">Tu n’as pas réparé ma vie, ou je ne sais quoi.<br>Parce qu’au fond, nous le savons, c’est le destin qui nous a rapprochés.</p>
+<p class="">Mais tu as fait quelque chose de beaucoup plus précieux.</p>
+<p class="">Tu m’as donné envie<br>d’en prendre soin.</p>
+<p class="">Tu m’as appris que montrer ce que je ressens<br>ne me rendait pas plus faible.</p>
+<p class="">Que tenir à quelqu’un,<br>ça signifiait aussi accepter d’avoir peur de le perdre.</p>
+<p class="">Et avoir peur de te perdre, j’y pense souvent.</p>
+<p class="">Parfois même beaucoup trop.</p>
+<p class="">Je me demande encore et encore ce que je ferais si un jour je te perdais…</p>
+<p class="">Et je crois que c’est aussi ça, aimer quelqu’un.</p>
+<p class="">Accepter qu’une personne puisse prendre tellement de place dans notre vie<br>que l’idée même de ne plus l’avoir à nos côtés nous fasse peur.</p>
+<p class="">Mais tu m’as surtout appris que dire « je t’aime »,<br>ce n’est pas seulement assembler trois mots.</p>
+<p class="">C’est leur donner un visage.</p>
+<p class="">Et maintenant,</p>
+<p class="">ils ont le tien.</p>
+<p class="">Avant toi,<br>je ne savais pas vraiment ce que je voulais devenir.</p>
+<p class="">Aujourd’hui encore, je n’ai pas toutes les réponses.</p>
+<p class="">Mais lorsque je pense à demain,<br>il y a une chose que je sais :</p>
+<p class="">j’aimerais que tu y sois.</p>
+<p class="">Je veux encore découvrir des centaines de versions de toi.</p>
+<p class="">La Camille heureuse.<br>La Camille fatiguée.<br>La Camille qui rit pour rien.<br>Celle qui doute.<br>Celle qui réussit.<br>Celle qui râle.<br>Celle qui rêve.</p>
+<p class="">Celle que tu es aujourd’hui<br>et toutes celles que les années feront de toi.</p>
+<p class="">Je veux être là pour les connaître.</p>
+<p class="">Et je veux que tu connaisses aussi<br>toutes les versions de moi<br>que je n’aurais peut-être jamais rencontrées sans toi.</p>
+<p class="">Parce qu’il y a le garçon que tu as rencontré,</p>
+<p class="">et puis il y a celui<br>que ton amour est doucement en train de faire grandir.</p>
+<p class="">Aujourd’hui, cela fait un an.</p>
+<p class="">Seulement un an.</p>
+<p class="">Et pourtant, quand je regarde tout ce que nous avons déjà vécu,<br>le mot « seulement » me paraît étrange.</p>
+<p class="">Une année, c’est douze mois.</p>
+<p class="">Cinquante-deux semaines.</p>
+<p class="">Trois cent soixante-cinq jours.</p>
+<p class="">Mais aucune unité de mesure<br>ne sait compter ce qui compte vraiment.</p>
+<p class="">On ne compte pas les regards.</p>
+<p class="">On ne compte pas les secondes<br>où l’on serre quelqu’un un peu plus fort<br>parce qu’on voudrait arrêter le temps.</p>
+<p class="">On ne compte pas toutes les fois<br>où son prénom traverse notre tête sans aucune raison.</p>
+<p class="">On ne compte pas les souvenirs minuscules<br>qui ne signifient rien pour les autres<br>et qui deviennent immenses pour nous.</p>
+<p class="">Et puis il y a quelque chose<br>que j’aime dans ton prénom.</p>
+<p class="">Ca-mille.</p>
+<p class="">Je sais que ce n’est qu’un hasard.</p>
+<p class="">Mais j’y entends « mille ».</p>
+<p class="">Mille sourires.</p>
+<p class="">Mille regards.</p>
+<p class="">Mille pensées.</p>
+<p class="">Mille souvenirs.</p>
+<p class="">Mille raisons de t’aimer<br>et probablement mille autres<br>que je n’ai pas encore découvertes.</p>
+<p class="">Et pourtant, aujourd’hui,<br>je ne veux retenir qu’un seul nombre.</p>
+<p class="">Un.</p>
+<p class="emphasis">Un an.</p>
+<p class="">Notre premier.</p>
+<p class="">Le premier chapitre<br>d’une histoire dont je ne connais pas la longueur,</p>
+<p class="">mais dont je sais déjà<br>que je voudrais lire encore énormément de pages.</p>
+<p class="">Je ne sais pas exactement ce que sera notre vie.</p>
+<p class="">Je ne peux pas te promettre<br>que tout sera toujours simple.</p>
+<p class="">Je ne peux pas te promettre<br>que nous ne nous disputerons jamais,<br>que nous ne nous blesserons jamais,<br>ou que nous saurons toujours trouver les bons mots.</p>
+<p class="">Ce serait te promettre une histoire parfaite.</p>
+<p class="">Et je ne veux pas d’une histoire parfaite.</p>
+<p class="">Je veux la nôtre.</p>
+<p class="">Avec ses maladresses.</p>
+<p class="">Ses moments magnifiques.</p>
+<p class="">Ses jours ordinaires.</p>
+<p class="">Ses difficultés.</p>
+<p class="">Ses voyages.</p>
+<p class="">Ses silences.</p>
+<p class="">Ses éclats de rire.</p>
+<p class="">Ses « je t’aime » murmurés sans occasion particulière.</p>
+<p class="">Et toutes ces choses<br>que nous ne savons même pas encore<br>que nous allons vivre ensemble.</p>
+<p class="">Je veux pouvoir regarder tes yeux dans plusieurs années<br>et reconnaître encore ceux<br>qui m’ont arrêté ce jour-là.</p>
+<p class="">Ces yeux dans lesquels,<br>sans vraiment savoir pourquoi,</p>
+<p class="emphasis">j’avais vu mon avenir.</p>
+<p class="">Camille,</p>
+<p class="">pendant longtemps,<br>j’ai cru que ne rien ressentir était une force.</p>
+<p class="">Puis tu es arrivée<br>et tu m’as appris exactement l’inverse.</p>
+<p class="">La force, c’est peut-être d’aimer quelqu’un suffisamment<br>pour lui confier cette partie de soi<br>que l’on avait passé des années à protéger.</p>
+<p class="">Alors aujourd’hui,<br>pour nos un an,<br>je te la confie entièrement.</p>
+<p class="">Je ne sais toujours pas parfaitement aimer.</p>
+<p class="">Je ne sais toujours pas trouver les bons mots à chaque fois.</p>
+<p class="">Je ferai encore des erreurs.</p>
+<p class="">Je te ferai sûrement parfois chier aussi, faut pas se mentir.</p>
+<p class="">Mais il y a une chose<br>dont je ne doute pas :</p>
+<p class="">parmi tous les regards<br>que j’aurais pu croiser,</p>
+<p class="">parmi toutes les histoires<br>que j’aurais pu vivre,</p>
+<p class="">parmi toutes les personnes<br>que la vie aurait pu placer sur mon chemin,</p>
+<p class="emphasis">je t’ai choisie, toi.</p>
+<p class="">Et si c’était à refaire,</p>
+<p class="">je te choisirais encore.</p>
+<p class="">Joyeux un an, mon amour.</p>
+<p class="">Et si ton prénom signifiait autrefois<br>celle qui pouvait approcher le sacré,</p>
+<p class="">alors après cette année avec toi,<br>je crois avoir enfin compris quelque chose<br>que les hommes savaient peut-être déjà il y a deux mille ans :</p>
+<p class="">certaines personnes entrent dans notre vie<br>et, sans bruit,</p>
+<p class="">rendent sacré<br>tout ce qu’elles touchent.</p>
+<p class="">Tu as fait ça de la mienne.</p>
+<p class="">Et peut-être que je ne saurai jamais parfaitement t’expliquer tout ce que je ressens pour toi.</p>
+<p class="">Mais finalement,<br>si après toutes ces lignes je devais tout résumer en trois mots,</p>
+<p class="">ce seraient les trois mêmes.</p>
+<p class="">Simplement, aujourd’hui,<br>ils veulent dire beaucoup plus qu’avant.</p>
+<p class="emphasis">Je t’aime, Camille.</p>
+  
+  </article>
+</section>
+
+<section class="final">
+  <div class="heart">♡</div>
+  <h3>Je t’aime, Camille.</h3>
+  <p>Notre premier an. Et, je l’espère, le premier de beaucoup d’autres.</p>
+</section>
+
+
+<script>
+(function(){
+  var music=document.getElementById('bgMusic');
+  var toggle=document.getElementById('musicToggle');
+  var open=document.getElementById('openLetter');
+  music.volume=0.18;
+
+  function label(){
+    toggle.textContent = music.paused ? '♪ Musique' : '♪ Couper';
+  }
+
+  open.addEventListener('change', function(){
+    if(open.checked){
+      music.muted=false;
+      music.play().then(label).catch(label);
+    }
+  });
+
+  toggle.addEventListener('click', function(){
+    if(music.paused){
+      music.play().then(label).catch(label);
+    }else{
+      music.pause();
+      label();
+    }
+  });
+
+  label();
+})();
+</script>
+
+</body>
+</html>
