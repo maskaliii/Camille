@@ -245,6 +245,18 @@ h1{
   color:#c8b9bf;
   font-style:italic;
 }
+
+.music-toggle{
+  position:fixed;right:14px;bottom:14px;z-index:100;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(17,12,15,.78);color:#fff;
+  border-radius:999px;padding:10px 13px;
+  font:600 .72rem system-ui,-apple-system,sans-serif;
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  box-shadow:0 8px 22px rgba(0,0,0,.24);
+  cursor:pointer;
+}
+
 @media(max-width:420px){
   .hero{padding-top:28px}
   .envelope-scene{width:min(76vw,320px)}
@@ -255,6 +267,12 @@ h1{
 </style>
 </head>
 <body>
+
+<audio id="bgMusic" preload="metadata" loop playsinline>
+  <source src="Tame%20Impala%20-%20The%20Less%20I%20Know%20The%20Better%20(Audio).mp4" type="audio/mp4">
+</audio>
+<button id="musicToggle" class="music-toggle" type="button" aria-label="Couper ou remettre la musique">♪ Musique</button>
+
 
 <input type="checkbox" id="openLetter">
 
@@ -457,6 +475,38 @@ h1{
   <h3>Je t’aime, Camille.</h3>
   <p>Notre premier an. Et, je l’espère, le premier de beaucoup d’autres.</p>
 </section>
+
+
+<script>
+(function(){
+  var music=document.getElementById('bgMusic');
+  var toggle=document.getElementById('musicToggle');
+  var open=document.getElementById('openLetter');
+  music.volume=0.18;
+
+  function label(){
+    toggle.textContent = music.paused ? '♪ Musique' : '♪ Couper';
+  }
+
+  open.addEventListener('change', function(){
+    if(open.checked){
+      music.muted=false;
+      music.play().then(label).catch(label);
+    }
+  });
+
+  toggle.addEventListener('click', function(){
+    if(music.paused){
+      music.play().then(label).catch(label);
+    }else{
+      music.pause();
+      label();
+    }
+  });
+
+  label();
+})();
+</script>
 
 </body>
 </html>
